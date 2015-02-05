@@ -1,8 +1,9 @@
 (ns hickory-stack.core
-  (:require [clojure.browser.repl :as repl]))
-
-;; (repl/connect "http://localhost:9000/repl")
+  (:require [clojure.browser.repl :as repl]
+            [hickory.core :as h])
+  )
 
 (enable-console-print!)
 
-(println "Hello world!")
+(println (map h/as-hiccup (h/parse-fragment "<div>test</div>"))) 
+(println (map h/as-hiccup (h/parse-fragment "<div style='color:red'>test</div>")))
