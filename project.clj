@@ -15,21 +15,18 @@
 
   :clean-targets ["out" "out-adv"]
 
-  :cljsbuild {
-    :builds [{:id "dev"
-              :source-paths ["src"]
-              :compiler {
-                :main hickory-stack.core
-                :output-to "out/hickory_stack.js"
-                :output-dir "out"
-                :optimizations :none
-                :cache-analysis true
-                :source-map true}}
-             {:id "release"
-              :source-paths ["src"]
-              :compiler {
-                :main hickory-stack.core
-                :output-to "out-adv/hickory_stack.min.js"
-                :output-dir "out-adv"
-                :optimizations :advanced
-                :pretty-print false}}]})
+  :cljsbuild {:builds [{:id "dev"
+                        :source-paths ["src"]
+                        :compiler {:main hickory-stack.core
+                                   :output-to "out/hickory_stack.js"
+                                   :output-dir "out"
+                                   :optimizations :none
+                                   :cache-analysis true
+                                   :source-map true}}
+                       {:id "release"
+                        :source-paths ["src"]
+                        :compiler {:main hickory-stack.core
+                                   :output-to "out-adv/hickory_stack.min.js"
+                                   :output-dir "out-adv"
+                                   :optimizations :advanced
+                                   :pretty-print false}}]})
