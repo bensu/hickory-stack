@@ -4,6 +4,7 @@
 
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2755"]
+                 [reagent "0.5.0-alpha"]
                  [hickory "0.5.4"]]
 
   :node-dependencies [[source-map-support "0.2.8"]]

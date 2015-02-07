@@ -1,11 +1,12 @@
 (ns hickory-stack.core
   (:require [clojure.string :as s]
             [clojure.walk :as w]
+            [reagent.core :as reagent :refer [atom]]
             [hickory.core :as h]))
 
 (enable-console-print!)
 
-(def good-style "color:red;background:black; font-style: normal    ;font-size : 10px")
+(def good-style "color:red;background:black; font-style: normal    ;font-size : 20px")
 
 (defn string->tokens
   "Takes a string with syles and parses it into properties and value tokens"
@@ -15,10 +16,6 @@
   (->> (s/split style #";")
        (mapcat #(s/split % #":"))
        (map s/trim)))
-
-(println "Test for parse-string")
-(println (string->tokens good-style))
-
 (defn tokens->map
   "Takes a seq of tokens with the properties (even) and their values (odd)"
   [tokens]
@@ -32,9 +29,6 @@
   [style]
   (tokens->map (string->tokens style)))
 
-(println "Test for style-map")
-(println (style->map good-style))
-
 (defn hiccup->sablono [coll]
   (w/postwalk
    (fn [x]
@@ -44,8 +38,28 @@
    coll))
 
 (def html-fragment
-  (str "<div style='" good-style "'>test</div>"))
+    (str "<div style='" good-style "'>test</div>"))
 
-(println "Test for walk")
-(println (hiccup->sablono (first (map h/as-hiccup (h/parse-fragment html-fragment)))))
+(defn some-view []
+  [:div (hiccup->sablono
+         (first (map h/as-hiccup (h/parse-fragment html-fragment))))])
+
+(reagent/render-component [some-view]
+                          (. js/document (getElementById "app")))
+
+(comment  ;; Testing
+  
+  (println "Test for style-map")
+  (println (style->map good-style))
+
+  (println "Test for parse-string")
+  (println (string->tokens good-style))
+
+  (println "Test for walk")
+  (println (hiccup->sablono
+            (first (map h/as-hiccup (h/parse-fragment html-fragment))))))
+
+
+
+
 
