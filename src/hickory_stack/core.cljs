@@ -16,8 +16,10 @@
   (->> (s/split style #";")
        (mapcat #(s/split % #":"))
        (map s/trim)))
+
 (defn tokens->map
-  "Takes a seq of tokens with the properties (even) and their values (odd)"
+  "Takes a seq of tokens with the properties (even) and their values (odd)
+   and returns a map of {properties values}"
   [tokens]
   {:pre [(even? (count tokens))]
    :post [(map? %)]}
@@ -30,15 +32,17 @@
   (tokens->map (string->tokens style)))
 
 (defn hiccup->sablono [coll]
-  (w/postwalk
-   (fn [x]
-     (if (map? x)
-       (do (println x) (update-in x [:style] style->map))
-       x))
-   coll))
+  (let [c (w/postwalk
+           (fn [x]
+             (if (map? x)
+               (update-in x [:style] style->map)
+               x))
+           coll)]
+    (println c)
+    c))
 
 (def html-fragment
-    (str "<div style='" good-style "'>test</div>"))
+  (str "<div style='" good-style "'><div id='a' class='btn' style='font-size:30px;color:white'>test1</div>test2</div>"))
 
 (defn some-view []
   [:div (hiccup->sablono
