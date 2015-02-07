@@ -6,8 +6,6 @@
 
 (enable-console-print!)
 
-(def good-style "color:red;background:black; font-style: normal    ;font-size : 20px")
-
 (defn string->tokens
   "Takes a string with syles and parses it into properties and value tokens"
   [style]
@@ -31,18 +29,24 @@
   [style]
   (tokens->map (string->tokens style)))
 
-(defn hiccup->sablono [coll]
-  (let [c (w/postwalk
-           (fn [x]
-             (if (map? x)
-               (update-in x [:style] style->map)
-               x))
-           coll)]
-    (println c)
-    c))
+(defn hiccup->sablono
+  "Transforms a style inline attribute into a style map for React"
+  [coll]
+  (w/postwalk
+   (fn [x]
+     (if (map? x)
+       (update-in x [:style] style->map)
+       x))
+   coll))
+
+;; Test Data
+
+(def good-style "color:red;background:black; font-style: normal    ;font-size : 20px")
 
 (def html-fragment
   (str "<div style='" good-style "'><div id='a' class='btn' style='font-size:30px;color:white'>test1</div>test2</div>"))
+
+;; Rendering
 
 (defn some-view []
   [:div (hiccup->sablono
